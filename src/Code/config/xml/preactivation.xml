@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<partners>
+<partner>
+	<name><![CDATA[payulatam]]></name>
+	<module>payulatam</module>
+	<checkconfiguration>
+		<key>PAYULATAM_CONFIGURATION_OK</key>
+	</checkconfiguration>
+	<logo><![CDATA[https://api.prestashop.com/partner/premium/images/payulatam.png]]></logo>
+	<labels>
+		<label iso="en"><![CDATA[The easiest solution to receive online payments in Latin America]]></label>
+		<label iso="es"><![CDATA[La solución más fácil para recibir pagos en línea en América Latina]]></label>
+		<label iso="pt"><![CDATA[A solução mais fácil para receber pagamentos on-line na América Latina]]></label>
+	</labels>
+	<optionals>
+	</optionals>
+	<descriptions>
+	</descriptions>
+</partner>
+<partner>
+	<name><![CDATA[authorizeaim]]></name>
+	<module>authorizeaim</module>
+	<checkconfiguration>
+		<key>NO_CHECK_REQUIRED_YET</key>
+	</checkconfiguration>
+	<logo><![CDATA[https://api.prestashop.com/partner/premium/images/authorizeaim.png]]></logo>
+	<labels>
+		<label iso="en"><![CDATA[Join 400k+ merchants already relying on Authorize.Net for payment processing]]></label>
+		<label iso="fr"><![CDATA[Rejoignez les 400k marchands qui utilisent Authorize.Net pour les paiements en ligne]]></label>
+		<label iso="es"><![CDATA[Únete a los 400k comerciantes que confían en Authorize.Net para recibir pagos en linea]]></label>
+		<label iso="it"><![CDATA[Già 400.000 negozianti hanno scelto Authorize.Net per il pagamento online, provalo anche tu]]></label>
+		<label iso="pt"><![CDATA[Junte-se a 400k+ comerciantes já contando com Authorize.Net para processar pagamentos]]></label>
+		<label iso="de"><![CDATA[Seien Sie einer der >400000 Händler, die Authorize.Net für die Zahlung verwenden]]></label>
+		<label iso="pl"><![CDATA[Tak jak 400 tys. innych sprzedawców zlecaj Authorize.Net przetwarzanie płatności]]></label>
+		<label iso="nl"><![CDATA[Vergezel de 400k+ handelaars die al een beroep doen op Authorize.Net voor de verwerking van betalingen]]></label>
+	</labels>
+	<optionals>
+	</optionals>
+	<descriptions>
+	</descriptions>
+</partner>
+</partners>
