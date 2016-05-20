@@ -47,7 +47,6 @@ $i=1;
 echo '<h1>Proceso de insercion iniciado para sucursal: '.$nombreShop['Shop'].'</h1>';
 echo '<br/>';
 echo '<h1>Paso 3: Resultados del proceso</h1>';
-
 echo '<br/>';
 
 

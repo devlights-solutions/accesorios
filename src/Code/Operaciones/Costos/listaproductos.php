@@ -1,6 +1,6 @@
 <html>
 
-<title>Ingreso masivo de productos</title>
+<title>Ingreso de precios especificos</title>
 
 <link href="css/style.css" rel="stylesheet" type="text/css">
 
@@ -26,11 +26,11 @@ if ($idsproducto =='')
 
 <body>
 
-<h1>Ingreso Masivo de Productos</h1>
+<h1>Ingreso de precios especificos</h1>
 
 <br/>
 
-<h1>Paso 2: Ingreso de cantidades</h1>
+<h1>Paso 2: Ingreso de precios por productos</h1>
 
 <?php
 
@@ -165,8 +165,6 @@ while($row_list=mysql_fetch_array($productos))
 
 		{
 
-			echo 'sil001';
-
 			echo '<td>';echo $row_list['name'].$row_list['id_product_attribute'];echo '</td>';
 
 
@@ -174,7 +172,7 @@ while($row_list=mysql_fetch_array($productos))
 			
 			echo '<td>';echo $row_list['price'];echo '</td>';
 
-			echo '<td>';echo "<input type='text' name=$count>";echo '</td>';
+			echo '<td>';echo "<input type='text' name=precio$count>";echo '</td>';
 
 		}
 
@@ -188,7 +186,6 @@ while($row_list=mysql_fetch_array($productos))
 
 		//Muestro productos con combinaciones
 		
-		echo 'sil2';
 
 		$atributos="SELECT cal.name FROM cma_attribute_lang cal WHERE cal.id_attribute IN
 
@@ -205,13 +202,13 @@ while($row_list=mysql_fetch_array($productos))
 
 		$specificPrices = "SELECT csp.price FROM cma_specific_price csp WHERE id_product = ".$idsproducto." AND id_shop = ".$shop." and id_product_attribute = ".$row_list['id_product_attribute']." ";
 
-		echo $specificPrices;
+		//echo $specificPrices;
 			
 		$specificPrices=mysql_query($specificPrices);
 
 		$specificPrice= mysql_fetch_array($specificPrices);
 
-		echo $specificPrice;
+		//echo $specificPrice;
 		
 
 		if ($picaflor['name']<>'')
@@ -262,7 +259,7 @@ while($row_list=mysql_fetch_array($productos))
 
 				echo '<td>';echo $specificPrice['price'];echo '</td>';
 
-				echo '<td>';echo "<input type='text' name=$count>";echo '</td>';
+				echo '<td>';echo "<input type='text' name=precio$count>";echo '</td>';
 
 				echo '</tr>';
 

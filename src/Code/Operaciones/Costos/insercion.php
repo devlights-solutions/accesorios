@@ -6,19 +6,20 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<title>Proceso de insercion</title>
+<title>Proceso de insercion precios especificos</title>
 
 <link href="css/style.css" rel="stylesheet" type="text/css">
 
 <?php
-
 $cant = $_GET[9999];
 
 $shop = $_GET['ids'];
 
 $idsproducto = $_GET['idsproducto'];
-
-
+//echo '<br>';
+//echo 'SHOP'. $shop;
+//echo '<br>';
+//echo $idsproducto;
 
 ?>
 
@@ -81,22 +82,22 @@ INSERT INTO InsercionPrecios
 	);";
 
 	//echo $insert;
+//echo '<br>';
 
  mysql_query($insert);
 
 $idInsercion=mysql_insert_id();
+//echo '<br>';
 
-//echo $idInsercion;
+//echo 'ID DE INSERCION:'.$idInsercion;
 
 $i=1;
 
-echo '<h1>Proceso de insercion iniciado para sucursal: '.$nombreShop['Shop'].'</h1>';
+echo '<h1>Proceso de insercion de costos especificos iniciado para sucursal: '.$nombreShop['Shop'].'</h1>';
 
 echo '<br/>';
 
 echo '<h1>Paso 3: Resultados del proceso</h1>';
-
-
 
 echo '<br/>';
 
@@ -106,15 +107,23 @@ echo '<br/>';
 
 //traigo los productos
 
+//traigo los productos
+
 $productos = "SELECT  * FROM cma_stock_available csa 
 
 INNER JOIN cma_product_lang cpl 
 
 ON cpl.id_product = csa.id_product
 
-WHERE csa.id_shop = ".$shop." AND  cpl.id_shop= ".$shop." AND id_lang = 1 AND csa.id_product = ".$idsproducto." 
+INNER JOIN cma_product cp
 
-ORDER BY cpl.name";
+ON cp.id_product = csa.id_product
+
+WHERE csa.id_shop = ".$shop." AND  cpl.id_shop= ".$shop." AND id_lang = 1  AND csa.id_product = ".$idsproducto."
+
+ORDER BY cpl.name
+
+";
 
 //
 
@@ -127,16 +136,19 @@ $productos= mysql_query($productos);
 while($row_list=mysql_fetch_array($productos))
 
 {
+	//echo $i;
+	$cantidad = $_GET['precio'.$i];
 
-	$cantidad = $_GET[$i];
+	//echo '<br>';
+	//echo '<br>';
+	//echo '<br>';
+	//echo 'cantidad'. $cantidad;	
+
+	$costo = $_GET['cantidad'.$i];
 
 	
 
-	$costo = $_GET['cost'.$i];
-
-	
-
-	echo 'el costo es'.$costo;
+	//echo 'el costo es'.$costo;
 
 	if ($costo == '')
 
@@ -168,7 +180,7 @@ while($row_list=mysql_fetch_array($productos))
 
 			$idstock=mysql_query($idstock);
 
-			echo 'id stock es:'.$idstock;
+			//echo 'id stock es:'.$idstock;
 
 			echo '<br/>';
 
@@ -200,75 +212,28 @@ while($row_list=mysql_fetch_array($productos))
 
 			
 
-			//determino si es aumento o disminucion de stock
-
-			if ($cantidad>0)
-
-			{
-
-				$mvtreason=1;
-
-				$signo=1;
-
-				$mensaje='aumentaron ';
-
-			}
-
-				
-
-			else
-
-			{
-
-				$mvtreason=2;
-
-				$cantidad=$cantidad*-1;
-
-				$signo=-1;
-
-				$mensaje='disminuyeron ';
-
-			}
-
-			//
+			
 
 			
 
 		
-
-		
-
-				
-
-				
-
-
-
-
-
 			//
 
 			
 
 		//INSERT INSERCIONDETALLE
 
-		$insertDetalle="INSERT INTO InsercionDetallePrecios 
+		$insertDetalle="INSERT INTO InsercionPreciosDetalles 
 
-							( 
+						( 
 
-							IdInsercion, 
+							IdInsercionPrecio, 
 
 							IdProduct, 
 
 							IdAttribute, 
 
-							Quantity, 
-
-							StockStatus, 
-
-							StockMvtStatus, 
-
-							StockAvailableStatus
+							Price
 
 							)
 
@@ -282,13 +247,7 @@ while($row_list=mysql_fetch_array($productos))
 
 							".$row_list['id_product_attribute'].", 
 
-							".$cantidad.", 
-
-							".$IsStockStatus.", 
-
-							".$IdStockMvtStatus.", 
-
-							".$IdStockAvailableStatus."
+							".$cantidad."
 
 							);";
 
@@ -302,8 +261,103 @@ while($row_list=mysql_fetch_array($productos))
 
 		
 
-		//inserto o actualizo la tabla Costos
+		//Actualizar precios especificos
+		$specificPrice="SELECT * FROM cma_specific_price cmp WHERE cmp.id_product = ".$row_list['id_product']." AND cmp.id_product_attribute = ".$row_list['id_product_attribute']." AND cmp.id_shop=".$shop."";
+		//echo '<br>';
+		//echo $specificPrice;
 
+//echo '<br>';echo '<br>';
+		$specificPrice=mysql_query($specificPrice);
+		$specificPrice=mysql_fetch_array($specificPrice);
+		
+		if ($specificPrice<> '')
+		{
+			//echo 'Hay Resultados' . $cantidad;
+
+			$delete="DELETE FROM cma_specific_price WHERE id_product = ".$row_list['id_product']." AND id_product_attribute = ".$row_list['id_product_attribute']." AND id_shop=".$shop."";
+		            
+		   // echo $delete;
+			mysql_query($delete);
+
+			$insert= " INSERT INTO cma_specific_price
+						(
+						id_specific_price_rule, 
+						id_cart, 
+						id_product, 
+						id_shop, 
+						id_shop_group, 
+						id_currency, 
+						id_country, 
+						id_group, 
+						id_customer, 
+						id_product_attribute, 
+						price, 
+						from_quantity, 
+						reduction, 
+						reduction_type
+						)
+						VALUES
+						( 
+						0, 
+						0, 
+						".$row_list['id_product'].", -- id_product
+						".$shop.", -- id_shop
+						0, 
+						0, 
+						0, 
+						0, 
+						0, 
+						".$row_list['id_product_attribute'].", -- id_product_attribute 
+						".$cantidad.", -- price
+						1, 
+						0, 
+						'amount'
+						);";
+			mysql_query($insert);
+		}
+		else
+		{
+			//echo 'No Hay Resultados';
+			$insert= " INSERT INTO cma_specific_price
+						(
+						id_specific_price_rule, 
+						id_cart, 
+						id_product, 
+						id_shop, 
+						id_shop_group, 
+						id_currency, 
+						id_country, 
+						id_group, 
+						id_customer, 
+						id_product_attribute, 
+						price, 
+						from_quantity, 
+						reduction, 
+						reduction_type
+						)
+						VALUES
+						( 
+						0, 
+						0, 
+						".$row_list['id_product'].", -- id_product
+						".$shop.", -- id_shop
+						0, 
+						0, 
+						0, 
+						0, 
+						0, 
+						".$row_list['id_product_attribute'].", -- id_product_attribute 
+						".$cantidad.", -- price
+						1, 
+						0, 
+						'amount'
+						);";
+			mysql_query($insert);
+		}
+		echo '<br>';
+echo '<br>';
+
+		
 		
 		//Mensaje de éxito con descripcion del producto y cantidad anadida
 
@@ -335,7 +389,7 @@ while($row_list=mysql_fetch_array($productos))
 
 		
 
-		echo '<p2>Se '.$mensaje.$cantidad. ' articulos para el producto '.$row_list['name'].' '.$atributo.' con un costo de $ '.$costo.'</p2>';
+		echo '<p2>Se modifico el precio del producto '.$row_list['name'].' '.$atributo.' a $  '.$mensaje.$cantidad. ' </p2>';
 
 		
 

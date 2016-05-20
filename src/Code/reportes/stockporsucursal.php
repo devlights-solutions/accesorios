@@ -48,7 +48,7 @@ mysql_query("DELETE FROM a_StockSucursal WHERE Sucursal = $shop");
 
 
 //traigo productos ordenados por posicion
-$productos = "SELECT csa.id_product,cp.price,csa.id_product_attribute,csa.quantity,cpl.name, ca.position FROM cma_stock_available csa 
+$productos = "SELECT csa.id_product,cp.price,csa.id_product_attribute,csa.quantity,cpl.name, ca.position, IFNULL(csp.price,0) specificprice FROM cma_stock_available csa 
 INNER JOIN cma_product_lang cpl 
 ON cpl.id_product = csa.id_product
 INNER JOIN cma_product cp
@@ -57,15 +57,20 @@ INNER JOIN  cma_product_attribute_combination pac
 ON pac.id_product_attribute = csa.id_product_attribute
 INNER JOIN cma_attribute ca
 ON  ca.id_attribute = pac.id_attribute
-WHERE csa.id_shop =  ".$shop." AND  cpl.id_shop= ".$shop." AND id_lang = 1  AND csa.quantity >0
+LEFT JOIN cma_specific_price csp
+ON csp.id_product = cp.id_product AND csp.id_product_attribute = csa.id_product_attribute
+WHERE csa.id_shop =  02 AND  cpl.id_shop= 02 AND id_lang = 1  AND csa.quantity >0
 GROUP BY id_product,id_product_attribute 
 ORDER BY cpl.name,ca.position
 ";
+
 //
+//echo $productos;
 
 
-
-
+$productosCount = mysql_query($productos);
+$productosCount = mysql_num_rows($productosCount);
+echo '<h2>Cantidad de productos en el listado: '.$productosCount.'</h2>';
 $productos= mysql_query($productos);
 
 
@@ -150,16 +155,18 @@ ORDER BY ca.id_attribute_group DESC ";
 				//echo '<td>';echo $row_list['quantity'];echo '</td>';
 				//echo "<td>".money_format('%.2n', $row_list['price'])."</td>";
 				//echo '</tr>';
-				
+
+
 				$insert="INSERT INTO a_StockSucursal 
-					(Id,Producto,Combinacion,Cantidad,Precio,Sucursal)
+					(Id,Producto,Combinacion,Cantidad,Precio,Sucursal,SpecificPrice)
 					VALUES
 					('".guidv4()."', 
 					'".$row_list['name']."',
 					'".$atributo."', 
 					".$row_list['quantity'].", 
 					".$row_list['price'].",
-					".$shop."
+					".$shop.",
+					".$row_list['specificprice']."
 					)";
 				
 				$a_stock= mysql_query($insert);
@@ -192,7 +199,11 @@ while($row_list=mysql_fetch_array($stock_query))
 	echo '<td>';echo $row_list['Producto'];echo '</td>';
 	echo '<td>';echo $row_list['Combinacion'];echo '</td>';
 	echo '<td>';echo $row_list['Cantidad'];echo '</td>';
-	echo "<td>".money_format('%.2n', $row_list['Precio'])."</td>";
+	if ($row_list['SpecificPrice'] > 0)
+		echo "<td><strong>".money_format('%.2n', $row_list['SpecificPrice'])."</strong></td>";
+	else
+		echo "<td>".money_format('%.2n', $row_list['Precio'])."</td>";
+	
 	echo '</tr>';
 }
 

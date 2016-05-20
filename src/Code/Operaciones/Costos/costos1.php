@@ -1,5 +1,5 @@
 <html>
-<title>Ingreso masivo de productos</title>
+<title>Ingreso de precios especificos</title>
 <link href="css/style.css" rel="stylesheet" type="text/css">
 <head>
 <?php
@@ -8,7 +8,7 @@
 
 </head>
 <body>
-<h1>Ingreso Masivo de Productos</h1>
+<h1>Ingreso de precios especificos</h1>
 <br/>
 <h1>Paso 1: Seleccion de sucursal y producto</h1>
 <?php
