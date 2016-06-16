@@ -59,7 +59,7 @@ INNER JOIN cma_attribute ca
 ON  ca.id_attribute = pac.id_attribute
 LEFT JOIN cma_specific_price csp
 ON csp.id_product = cp.id_product AND csp.id_product_attribute = csa.id_product_attribute
-WHERE csa.id_shop =  ".$shop." AND  cpl.id_shop= ".$shop." AND id_lang = 1  AND csa.quantity >0
+WHERE csa.id_shop =  02 AND  cpl.id_shop= 02 AND id_lang = 1  AND csa.quantity >0
 GROUP BY id_product,id_product_attribute 
 ORDER BY cpl.name,ca.position
 ";
